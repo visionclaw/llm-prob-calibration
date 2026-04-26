@@ -21,7 +21,8 @@ echo ""
 PROJECT_DIR="/home/bryan/.openclaw/workspace/projects/llm-prob-calibration"
 RESULTS_DIR="/mnt/workspace/bryan/llm-prob-calibration/results"
 LOGS_DIR="/mnt/workspace/bryan/llm-prob-calibration/logs"
-MODEL="${MODEL:-Qwen/Qwen2.5-7B-Instruct}"
+# Available models: google/gemma-3-27b-it, Qwen/Qwen3-8B, Qwen/Qwen2.5-7B-Instruct
+MODEL="${MODEL:-Qwen/Qwen3-8B}"
 
 export HF_HOME="/mnt/workspace/.hf"
 export UV_CACHE_DIR="/tmp/uv-cache-${USER}"
@@ -62,9 +63,9 @@ echo ""
 echo "[+] Running experiment..."
 python src/run_experiment.py \
     --model "${MODEL}" \
-    --output "${RESULTS_DIR}" \
+    --output "${RESULTS_DIR}/$(echo ${MODEL} | tr '/' '-')" \
     --resume \
-    --dtype float16
+    --dtype bfloat16
 
 # --- Run analysis ---
 echo ""

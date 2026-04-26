@@ -65,16 +65,16 @@ source .venv/bin/activate
 python data/generate_dataset.py
 
 # Run experiment (requires GPU)
-python src/run_experiment.py --model Qwen/Qwen2.5-7B-Instruct --output results/
+# Default: Qwen3-8B. Also supported: google/gemma-3-12b-it, Qwen/Qwen3-8B
+python src/run_experiment.py --model Qwen/Qwen3-8B --output results/Qwen3-8B/
 
-# Analyze results
-python src/analyze.py --results results/ --output reports/figures/
-```
+# Run with Gemma 3
+python src/run_experiment.py --model google/gemma-3-12b-it --output results/gemma-3-12b/
 
-## SLURM
-
-```bash
+# Or via SLURM (runs Qwen3-8B by default)
 sbatch slurm/run_experiment.sbatch
+# Override model:
+MODEL=google/gemma-3-12b-it sbatch slurm/run_experiment.sbatch
 ```
 
 ## Project Structure
