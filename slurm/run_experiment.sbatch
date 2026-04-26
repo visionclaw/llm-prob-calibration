@@ -18,14 +18,16 @@ echo "Start time: $(date)"
 echo ""
 
 # --- Configuration ---
-PROJECT_DIR="/home/bryan/.openclaw/workspace/projects/llm-prob-calibration"
+PROJECT_DIR="/home/vision/llm-prob-calibration"
 RESULTS_DIR="/mnt/workspace/bryan/llm-prob-calibration/results"
 LOGS_DIR="/mnt/workspace/bryan/llm-prob-calibration/logs"
-# Available models: google/gemma-3-27b-it, Qwen/Qwen3-8B, Qwen/Qwen2.5-7B-Instruct
+# Available models: Qwen/Qwen3-8B, google/gemma-3-12b-it
+# Override: MODEL=google/gemma-3-12b-it sbatch slurm/run_experiment.sbatch
 MODEL="${MODEL:-Qwen/Qwen3-8B}"
 
 export HF_HOME="/mnt/workspace/.hf"
 export UV_CACHE_DIR="/tmp/uv-cache-${USER}"
+export PATH="$HOME/.local/bin:$PATH"
 
 # --- Setup ---
 mkdir -p "${RESULTS_DIR}" "${LOGS_DIR}"
