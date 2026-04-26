@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=llm-prob-calibration
-#SBATCH --partition=research
+#SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=8
