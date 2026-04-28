@@ -37,6 +37,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 from logit_extractor import compute_entropy, kl_divergence, count_modes
 
 
+def number_to_token_label(n: int) -> str:
+    """Format integer 0-100 as its token sequence, e.g. 7 -> '[7]', 57 -> '[5][7]'."""
+    return "".join(f"[{c}]" for c in str(n))
+
+
 def find_results_files(results_dir: str) -> dict:
     """Returns {model_name: path_to_results_jsonl}.
 
@@ -328,7 +333,14 @@ def plot_attractor_analysis(df: pd.DataFrame, output_dir: str, model_name: str =
                 horizontalalignment="right",
                 bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5))
 
-        ax.set_xlabel("Predicted Probability (P argmax)")
+        # Token-format X-axis ticks (every 5 values for attractor plot)
+        tick_step = 5
+        tick_positions = np.arange(0, 101, tick_step)
+        tick_labels = [number_to_token_label(int(n)) for n in tick_positions]
+        ax.set_xticks(tick_positions)
+        ax.set_xticklabels(tick_labels, rotation=90, fontsize=7)
+
+        ax.set_xlabel("Token sequence (P argmax)")
         ax.set_ylabel("Count")
         ax.set_title(label)
         ax.set_xlim(-1, 101)

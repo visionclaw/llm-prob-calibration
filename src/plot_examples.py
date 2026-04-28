@@ -35,6 +35,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+def number_to_token_label(n: int) -> str:
+    """Format integer 0-100 as its token sequence, e.g. 7 -> '[7]', 57 -> '[5][7]', 100 -> '[1][0][0]'."""
+    return "".join(f"[{c}]" for c in str(n))
+
+
 def load_results(results_path: str) -> pd.DataFrame:
     """Load results from JSONL into DataFrame."""
     records = []
@@ -207,6 +212,13 @@ def plot_single_example(row: pd.Series, idx: int, output_dir: str) -> str:
 
         ax.bar(x, dist, color=colors, width=1.0, alpha=0.8)
 
+        # Token-format X-axis ticks (every 5 values)
+        tick_step = 5
+        tick_positions = np.arange(0, 101, tick_step)
+        tick_labels = [number_to_token_label(int(n)) for n in tick_positions]
+        ax.set_xticks(tick_positions)
+        ax.set_xticklabels(tick_labels, rotation=90, fontsize=6.5)
+
         # Ground truth line
         if gt is not None:
             ax.axvline(gt, color="green", linestyle="--", linewidth=2, alpha=0.8,
@@ -219,10 +231,10 @@ def plot_single_example(row: pd.Series, idx: int, output_dir: str) -> str:
         # Subplot label
         entropy_val = row[ent_key]
         modes_val = row[modes_key]
-        label_text = f"argmax={argmax_val} | H={entropy_val:.2f} | modes={modes_val}"
+        label_text = f"argmax={number_to_token_label(argmax_val)} | H={entropy_val:.2f} | modes={modes_val}"
         ax.set_title(f"{title}\n{label_text}", fontsize=9)
 
-        ax.set_xlabel("Value (0–100)")
+        ax.set_xlabel("Token sequence")
         ax.set_ylabel("Probability")
         ax.set_xlim(-1, 101)
         ax.legend(fontsize=8, loc="upper right")
@@ -266,6 +278,13 @@ def plot_gallery(selected: pd.DataFrame, output_dir: str) -> str:
 
         # Bar chart
         ax.bar(x, dist, color="steelblue", width=1.0, alpha=0.7)
+
+        # Token-format X-axis ticks (every 10 values for compact gallery)
+        tick_step = 10
+        tick_positions = np.arange(0, 101, tick_step)
+        tick_labels = [number_to_token_label(int(n)) for n in tick_positions]
+        ax.set_xticks(tick_positions)
+        ax.set_xticklabels(tick_labels, rotation=90, fontsize=6)
 
         # GT line
         gt = row.get("ground_truth", None)
